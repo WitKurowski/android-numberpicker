@@ -696,7 +696,6 @@ public class NumberPicker extends LinearLayout {
 	 * representation of valid indices.
 	 */
 	class InputTextFilter extends NumberKeyListener {
-
 		@Override
 		public CharSequence filter( final CharSequence source, final int start,
 				final int end, final Spanned dest, final int dstart,
@@ -704,6 +703,7 @@ public class NumberPicker extends LinearLayout {
 			if ( NumberPicker.this.mDisplayedValues == null ) {
 				CharSequence filtered =
 						super.filter( source, start, end, dest, dstart, dend );
+
 				if ( filtered == null ) {
 					filtered = source.subSequence( start, end );
 				}
@@ -716,6 +716,7 @@ public class NumberPicker extends LinearLayout {
 				if ( "".equals( result ) ) {
 					return result;
 				}
+
 				final int val = NumberPicker.this.getSelectedPos( result );
 
 				/*
@@ -731,23 +732,38 @@ public class NumberPicker extends LinearLayout {
 			} else {
 				final CharSequence filtered =
 						String.valueOf( source.subSequence( start, end ) );
+
 				if ( TextUtils.isEmpty( filtered ) ) {
 					return "";
 				}
+
 				final String result =
 						String.valueOf( dest.subSequence( 0, dstart ) )
 								+ filtered
 								+ dest.subSequence( dend, dest.length() );
 				final String str = String.valueOf( result ).toLowerCase();
+				CharSequence bestMatch = "";
+
 				for ( final String val : NumberPicker.this.mDisplayedValues ) {
 					final String valLowerCase = val.toLowerCase();
-					if ( valLowerCase.startsWith( str ) ) {
+
+					if ( valLowerCase.equals( str ) ) {
 						NumberPicker.this.postSetSelectionCommand(
 								result.length(), val.length() );
-						return val.subSequence( dstart, val.length() );
+						bestMatch = val.subSequence( dstart, val.length() );
+
+						break;
+					} else {
+						if ( valLowerCase.startsWith( str )
+								&& bestMatch.equals( "" ) ) {
+							NumberPicker.this.postSetSelectionCommand(
+									result.length(), val.length() );
+							bestMatch = val.subSequence( dstart, val.length() );
+						}
 					}
 				}
-				return "";
+
+				return bestMatch;
 			}
 		}
 
