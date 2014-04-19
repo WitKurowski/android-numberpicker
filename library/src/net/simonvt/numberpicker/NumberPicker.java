@@ -1978,33 +1978,48 @@ public class NumberPicker extends LinearLayout {
 	 * @return The selected index given its displayed <code>value</code>.
 	 */
 	private int getSelectedPos( String value ) {
+		int bestMatchPosition = this.mMinValue;
+
 		if ( this.mDisplayedValues == null ) {
 			try {
-				return Integer.parseInt( value );
-			} catch ( final NumberFormatException e ) {
+				bestMatchPosition = Integer.parseInt( value );
+			} catch ( final NumberFormatException numberFormatException ) {
 				// Ignore as if it's not a number we don't care
 			}
 		} else {
-			for ( int i = 0; i < this.mDisplayedValues.length; i++ ) {
+			value = value.toLowerCase();
+
+			for ( int i = 0; i < this.mDisplayedValues.length; ++i ) {
 				// Don't force the user to type in jan when ja will do
-				value = value.toLowerCase();
-				if ( this.mDisplayedValues[ i ].toLowerCase().startsWith( value ) ) {
-					return this.mMinValue + i;
+				final String currentDisplayedValue =
+						this.mDisplayedValues[ i ].toLowerCase();
+
+				if ( value.equals( currentDisplayedValue ) ) {
+					bestMatchPosition = this.mMinValue + i;
+
+					break;
+				} else {
+					if ( ( bestMatchPosition != this.mMinValue )
+							&& currentDisplayedValue.startsWith( value ) ) {
+						bestMatchPosition = this.mMinValue + i;
+					}
 				}
 			}
 
-			/*
-			 * The user might have typed in a number into the month field i.e.
-			 * 10 instead of OCT so support that too.
-			 */
-			try {
-				return Integer.parseInt( value );
-			} catch ( final NumberFormatException e ) {
-
-				// Ignore as if it's not a number we don't care
+			if ( bestMatchPosition == this.mMinValue ) {
+				/*
+				 * The user might have typed in a number into the month field
+				 * i.e. 10 instead of OCT so support that too.
+				 */
+				try {
+					bestMatchPosition = Integer.parseInt( value );
+				} catch ( final NumberFormatException numberFormatException ) {
+					// Ignore as if it's not a number we don't care
+				}
 			}
 		}
-		return this.mMinValue;
+
+		return bestMatchPosition;
 	}
 
 	@Override
