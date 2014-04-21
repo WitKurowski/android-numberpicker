@@ -662,7 +662,6 @@ public class NumberPicker extends LinearLayout {
 	 * @hide
 	 */
 	public static class CustomEditText extends EditText {
-
 		public CustomEditText( final Context context, final AttributeSet attrs ) {
 			super( context, attrs );
 		}
@@ -670,6 +669,7 @@ public class NumberPicker extends LinearLayout {
 		@Override
 		public void onEditorAction( final int actionCode ) {
 			super.onEditorAction( actionCode );
+
 			if ( actionCode == EditorInfo.IME_ACTION_DONE ) {
 				this.clearFocus();
 			}
@@ -2688,20 +2688,12 @@ public class NumberPicker extends LinearLayout {
 	 *            1.
 	 */
 	public void setDisplayedValues( final String[] displayedValues ) {
-		if ( this.mDisplayedValues == displayedValues ) {
-			return;
+		if ( this.mDisplayedValues != displayedValues ) {
+			this.mDisplayedValues = displayedValues;
+			this.updateInputTextView();
+			this.initializeSelectorWheelIndices();
+			this.tryComputeMaxWidth();
 		}
-		this.mDisplayedValues = displayedValues;
-		if ( this.mDisplayedValues != null ) {
-			// Allow text entry rather than strictly numeric entry.
-			this.mInputText.setRawInputType( InputType.TYPE_CLASS_TEXT
-					| InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS );
-		} else {
-			this.mInputText.setRawInputType( InputType.TYPE_CLASS_NUMBER );
-		}
-		this.updateInputTextView();
-		this.initializeSelectorWheelIndices();
-		this.tryComputeMaxWidth();
 	}
 
 	@Override
