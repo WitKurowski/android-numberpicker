@@ -1133,6 +1133,11 @@ public class NumberPicker extends LinearLayout {
 	private int mMaxWidth;
 
 	/**
+	 * The IME options requested.
+	 */
+	private int mImeOptions = EditorInfo.IME_ACTION_DONE;
+
+	/**
 	 * Flag whether to compute the max width.
 	 */
 	private final boolean mComputeMaxWidth;
@@ -1536,6 +1541,11 @@ public class NumberPicker extends LinearLayout {
 		this.mVirtualButtonPressedDrawable =
 				attributesArray.getDrawable( R.styleable.NumberPicker_virtualButtonPressedDrawable );
 
+		this.mImeOptions =
+				attributesArray.getInt(
+						R.styleable.NumberPicker_android_imeOptions,
+						this.mImeOptions ); 
+
 		attributesArray.recycle();
 
 		this.mPressedStateHelper = new PressedStateHelper();
@@ -1619,7 +1629,7 @@ public class NumberPicker extends LinearLayout {
 		this.mInputText.setFilters( new InputFilter[] { new InputTextFilter() } );
 
 		this.mInputText.setRawInputType( InputType.TYPE_CLASS_NUMBER );
-		this.mInputText.setImeOptions( EditorInfo.IME_ACTION_DONE );
+		this.mInputText.setImeOptions( this.mImeOptions );
 
 		// initialize constants
 		final ViewConfiguration configuration = ViewConfiguration.get( context );
