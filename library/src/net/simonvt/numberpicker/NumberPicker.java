@@ -1544,7 +1544,10 @@ public class NumberPicker extends LinearLayout {
 		this.mImeOptions =
 				attributesArray.getInt(
 						R.styleable.NumberPicker_android_imeOptions,
-						this.mImeOptions ); 
+						this.mImeOptions );
+		final int textSize = 
+				attributesArray.getDimensionPixelSize(
+						R.styleable.NumberPicker_android_textSize, -1 );
 
 		attributesArray.recycle();
 
@@ -1639,7 +1642,14 @@ public class NumberPicker extends LinearLayout {
 		this.mMaximumFlingVelocity =
 				configuration.getScaledMaximumFlingVelocity()
 						/ NumberPicker.SELECTOR_MAX_FLING_VELOCITY_ADJUSTMENT;
-		this.mTextSize = (int) this.mInputText.getTextSize();
+
+		if (textSize == -1) {
+			this.mTextSize = (int) this.mInputText.getTextSize();
+		} else {
+			this.mTextSize = textSize;
+
+			this.mInputText.setTextSize( TypedValue.COMPLEX_UNIT_PX, textSize );
+		}
 
 		// create the selector wheel paint
 		final Paint paint = new Paint();

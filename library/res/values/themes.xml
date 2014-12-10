@@ -30,6 +30,7 @@
         <!-- @hide The drawable for pressed virtual (increment/decrement) buttons. -->
         <attr name="virtualButtonPressedDrawable" format="reference"/>
         <attr name="android:imeOptions" />
+        <attr name="android:textSize" />
     </declare-styleable>
 
     <style name="NPWidget">
